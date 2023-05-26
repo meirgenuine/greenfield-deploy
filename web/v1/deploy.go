@@ -8,7 +8,7 @@ import (
 
 type Deployment struct {
 	Cluster     string `json:"cluster"`
-	Environment string `json:"environment"`
+	Environment string `json:"env"`
 	Namespace   string `json:"namespace"`
 	Project     string `json:"project"`
 	Version     string `json:"version"`
