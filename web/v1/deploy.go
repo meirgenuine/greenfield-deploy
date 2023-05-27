@@ -60,14 +60,32 @@ func (h deploymentService) DeployHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// todo it can take a lot of time
-	// so we have to add worker pool, and
-	// immediately return a like 'pending'
 	log.Printf("[deploy] deployment started: %+v", d)
+
+	w.WriteHeader(http.StatusOK)
+
+	go h.deploy(&d)
+}
+
+func (h deploymentService) deploy(d *DeployRequest) {
+	var reqErr error
+	midErr := make([]error, 0, 2)
+
+	defer func() {
+		if reqErr != nil {
+			h.Notify(d, fmt.Sprintf("Error occurred: %s", reqErr))
+		} else if len(midErr) > 0 {
+			h.Notify(d, fmt.Sprintf("Deployed with error: %s", midErr[0]))
+		} else if r := recover(); r != nil {
+			h.Notify(d, fmt.Sprintf("Server error occurred: %v", r))
+		} else {
+			h.Notify(d, "Successfully deployed")
+		}
+	}()
 	cc, err := github.Content(d.Project, d.Environment)
 	if err != nil {
-		http.Error(w, fmt.Sprintf(`github content: %s`, err), http.StatusNotFound)
 		log.Println("[deploy]", "github", err)
+		reqErr = fmt.Errorf("github: content: %w", err)
 		return
 	}
 	log.Printf("[deploy] content: %+v", cc)
@@ -75,6 +93,7 @@ func (h deploymentService) DeployHandler(w http.ResponseWriter, r *http.Request)
 		r, err := github.DownloadContent(c)
 		if err != nil {
 			log.Printf("error on download content: %v\n", err)
+			midErr = append(midErr, fmt.Errorf("github: download: %w", err))
 			continue
 		}
 
@@ -103,17 +122,14 @@ func (h deploymentService) DeployHandler(w http.ResponseWriter, r *http.Request)
 		log.Println("found manifest", "name", c.GetName(), "kind", kind, "api version", version)
 		manifest := io.NopCloser(strings.NewReader(vm.String()))
 		if err := k8s.Deploy(k8s.NewKubernetesConfigLocal(), d.Namespace, manifest); err != nil {
-			http.Error(w, fmt.Sprintf(`deploy to namespace: %s`, err), http.StatusBadRequest)
 			log.Println("[deploy]", "deploy to namespace", err)
+			midErr = append(midErr, fmt.Errorf("k8s: deploy: %w", err))
 			continue
 		}
 	}
-	w.WriteHeader(http.StatusOK)
-	// we use direct access to the bot (see todo above)
-	h.Notify(d, "Successfully deployed")
 }
 
-func (h deploymentService) Notify(r DeployRequest, message string) {
+func (h deploymentService) Notify(r *DeployRequest, message string) {
 	h.messenger.Notify(
 		notification.User{
 			ChatID: r.ChatID,

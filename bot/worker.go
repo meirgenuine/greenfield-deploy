@@ -35,6 +35,10 @@ func worker(sm *semaphore.Weighted, wg *sync.WaitGroup, bot *Bot, update tgbotap
 		resp = getListCommands()
 	}
 
+	if len(resp) < 1 {
+		return
+	}
+
 	log.Println("user", user.Name, "response", resp)
 	msg := tgbotapi.NewMessage(
 		user.ChatID,

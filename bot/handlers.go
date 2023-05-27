@@ -10,11 +10,11 @@ import (
 	"net/http"
 )
 
-func (b Bot) StartHandler() string {
+func (b *Bot) StartHandler() string {
 	return getListCommands()
 }
 
-func (b Bot) DeployHandler(u User, args ...string) string {
+func (b *Bot) DeployHandler(u User, args ...string) string {
 	if len(args) < 6 {
 		return "invalid args"
 	}
