@@ -5,6 +5,7 @@ This project supports greenfield's projects deployment in Kubernetes using Docke
 - [Usage](#deploy-projects-with-greenfield-deploy)
 - [How it works](#how-it-works)
 - [How to use GitHub Actions workflows](#github-actions-workflows)
+- [Container Orchestration](#container-orchestration)
 - [How to write k8s manifests](#kubernetes-manifests)
 - [Telegram Bot](#telegram-bot)
 - [Local setup](#local-setup)
@@ -148,6 +149,10 @@ This job runs only on a Linux (Ubuntu) environment and depends on the completion
 - Uses the softprops/action-gh-release action to create a new GitHub release. The release includes the version tag, change log, and attached assets (Linux binary, MacOS binary, and testnet configuration zip archive).
 
 *This workflow is essential for the consistent and efficient creation of new software releases. It ensures that each release comes with compiled binaries for supported operating systems, ready for users to download and use.*
+
+### [Container Orchestration](#container-orchestration)
+[Kubernetes](https://kubernetes.io/) would be used as solution for container orchestration.
+To interact with kubernetes Greenfield-deploy uses [k8s](https://github.com/din-mukhammed/greenfield-deploy/blob/main/pkg/k8s/k8s.go) package. As MVP, Greenfield-deploy uses config file from default location (~/.kube/config) but this project also supports approach with credentials usage (see more in [k8s.go](https://github.com/din-mukhammed/greenfield-deploy/blob/main/pkg/k8s/k8s.go#L25-L32)).
 
 ### [Kubernetes manifests](#kubernetes-manifests)
 Each project must have directory with kubernetes configs in `deployments/` folder. See more details in [official doc](https://kubernetes.io/docs/concepts/overview/working-with-objects/#:~:text=Understanding%20Kubernetes%20objects-,Kubernetes%20objects%20are%20persistent%20entities%20in%20the%20Kubernetes%20system.,running%20(and%20on%20which%20nodes)). So, for adding new project developer has to do the following steps:
