@@ -24,7 +24,6 @@ This project supports greenfield's projects deployment in Kubernetes using Docke
     - [Local setup](#local-setup)
     - [License](#license)
 
-
 ### [Deploy projects with greenfield-deploy](#deploy-projects-with-greenfield-deploy)
 To deploy specific project in kubernetes cluster do the following steps:
 1. Be sure that all tests are passed and docker image is pushed into container registry. (See [How to use GitHub Actions workflows](#github-actions-workflows))
@@ -181,13 +180,13 @@ So, for adding new project developer has to do the following steps:
 The project has a telegram bot that provides deploying operations. It allows you to run applications from created images.
 The bot sends a request to the deployment service. The request contains all information about image that you want to deploy.
 
-Send the following command to the bot:
+Request looks like this:
 
 ```
 /deploy <project> <version> <cluster> <namespace> <env>
 ```
 
-It deploys a project with name \<project\> (greenfield), version \<version\>(ex. latest), cluster \<cluster\>, namespace \<namespace\> and environment \<env\> (ex. dev, prod). 
+It deploys a project with name \<project\> (greenfield), version \<version\>(ex. latest), cluster \<cluster\>, namespace \<namespace\> and environment \<env\> (ex. dev, prod). Depending on the success of the execution, a message will be sent in response.
 
 Before using the bot, make sure that you have permissions to perform the deployment. New users are added via a pull request. To add a new user you should create a pull request and write his telegram username to config.yaml `PROJECT_DIR/bot/config/config.yaml` \<username\> : all. 
 
