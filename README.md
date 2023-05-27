@@ -8,6 +8,7 @@ This project supports greenfield's projects deployment in Kubernetes using Docke
 - [How to write k8s manifests](#kubernetes-manifests)
 - [Telegram Bot](#telegram-bot)
 - [Local setup](#local-setup)
+- [License](#license)
 
 
 ### [Deploy projects with greenfield-deploy](#deploy-projects-with-greenfield-deploy)
@@ -173,3 +174,8 @@ make local
 make bot
 ```
 Go ahead to deploy via [telegram](https://t.me/test_greenfield_deployment_bot)
+
+
+### [License](#license)
+
+The Greenfield-deploy project is licensed under the [Apache License 2.0](https://github.com/deedy/Apache-License/blob/master/LICENSE)
