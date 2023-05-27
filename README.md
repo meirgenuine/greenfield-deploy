@@ -7,17 +7,17 @@ This project supports greenfield's projects deployment in Kubernetes using Docke
     - [Deploy projects with greenfield-deploy](#deploy-projects-with-greenfield-deploy)
     - [How it works](#how-it-works)
     - [GitHub Actions Workflows](#github-actions-workflows)
-    - [1. Unit Tests, Gosec and Lint Workflow](#1-unit-tests-gosec-and-lint-workflow)
-      - [Build and Unit Test Job](#build-and-unit-test-job)
-      - [Gosec Job](#gosec-job)
-      - [Golangci-lint Job](#golangci-lint-job)
-    - [2. End to End Test Workflow](#2-end-to-end-test-workflow)
-      - [End to End Test Job](#end-to-end-test-job)
-    - [3. Docker Release Workflow](#3-docker-release-workflow)
-      - [Using the Docker Image](#using-the-docker-image)
-    - [4. Release Workflow](#4-release-workflow)
-      - [Build Job](#build-job)
-      - [Release Job](#release-job)
+        1. [Unit Tests, Gosec and Lint Workflow](#1-unit-tests-gosec-and-lint-workflow)
+         - [Build and Unit Test Job](#build-and-unit-test-job)
+         - [Gosec Job](#gosec-job)
+         - [Golangci-lint Job](#golangci-lint-job)
+        2. [End to End Test Workflow](#2-end-to-end-test-workflow)
+         - [End to End Test Job](#end-to-end-test-job)
+        3. [Docker Release Workflow](#3-docker-release-workflow)
+         - [Using the Docker Image](#using-the-docker-image)
+        4. [Release Workflow](#4-release-workflow)
+         - [Build Job](#build-job)
+         - [Release Job](#release-job)
     - [Container Orchestration](#container-orchestration)
     - [Kubernetes manifests](#kubernetes-manifests)
     - [Telegram Bot](#telegram-bot)
@@ -198,9 +198,9 @@ Send the following command to the bot:
 /deploy <project> <version> <cluster> <namespace> <env>
 ```
 
-It deploys a project with name \<project\> (greenfield), version \<version\>(ex. latest), cluster \<cluster\>, namespace \<namespace\> and environment \<env\> (ex. dev, prod). 
+It deploys a project with name \<project\> (greenfield), version \<version\>(ex. latest) to kubernetes cluster \<cluster\> with namespace \<namespace\> and environment \<env\> (ex. staging, production).
 
-Before using the bot, make sure that you have permissions to perform the deployment. New users are added via a pull request. To add a new user you should create a pull request and write his telegram username to config.yaml `PROJECT_DIR/bot/config/config.yaml` \<username\> : all. 
+Before using the bot, make sure that you have permissions to perform the deployment. New users are added via a pull request. To add a new user you should create a pull request and write his telegram username to config.yaml `PROJECT_DIR/bot/config/config.yaml` \<username\>.
 
 
 ### [Local setup](#local-setup)
