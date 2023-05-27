@@ -1,6 +1,29 @@
 # greenfield-deploy
+This project supports greenfield's projects deployment in Kubernetes using Docker images + Github Actions as workflow.
 
-## GitHub Actions Workflows
+## Table of Contents
+- [Usage](#deployment_flow)
+- [How it works](#how-it-works)
+- [How to write tests with Github Actions](#actions)
+- [How to write k8s manifests](#k8s_manifests)
+- [Telegram Bot](#bot)
+- [Local setup](#local_setup)
+
+
+### [Deploy projects with greenfield-deploy](#deployment_flow)
+To deploy specific project in kubernetes cluster do the following steps:
+1. Be sure that all tests are passed and docker image is pushed into container registry. (See [How to write tests with Github Actions](#actions))
+2. Send message to [Telegram Bot](#bot) with required parameters.
+3. Receive message from bot about deployment status.
+4. Double check that deployment succeeded by:
+```
+$ kubectl get pods -n <namespace>
+```
+
+### [How it works](#how-it-works)
+On each PR to the main branch of the specific project Github Actions starts running all checks(tests, linters, ...). After successfull checks Github Actions builds and pushes new docker image to docker container registry. Afterwards, developer how is reponsible for that commit can deploy this server via the Telegram Bot by sending message to it. Greenfield-deploy service receives the message from Telegram Bot and downloads k8s manifests from the repo. As the last step, Greenfield-deploy service applies this k8s manifests with specific version to Kubernetes Cluster.
+
+### [GitHub Actions Workflows](#actions)
 
 [This repository](https://github.com/meirgenuine/greenfield) utilizes several GitHub Actions workflows to automate common tasks. Below is a brief description of the workflows and how they operate.
 
@@ -125,6 +148,18 @@ This job runs only on a Linux (Ubuntu) environment and depends on the completion
 
 *This workflow is essential for the consistent and efficient creation of new software releases. It ensures that each release comes with compiled binaries for supported operating systems, ready for users to download and use.*
 
+### [Kubernetes manifests](#k8s_manifests)
+Each project must have directory with kubernetes configs in `deployments/` folder. See more details in [official doc](https://kubernetes.io/docs/concepts/overview/working-with-objects/#:~:text=Understanding%20Kubernetes%20objects-,Kubernetes%20objects%20are%20persistent%20entities%20in%20the%20Kubernetes%20system.,running%20(and%20on%20which%20nodes)). So, for adding new project developer has to do the following steps:
+1. Describe k8s manifests in folder: `deployments/<new-project-name>/` for each environment
+2. Each k8s config should start with prefix: `k8s_<environment>_`
 
-## Deploy
 
+### [Telegram Bot](#bot)
+
+### [Local setup](#local_setup)
+Run deploy server and telegram bot
+```
+make build
+make local
+# run telegram bot
+```
