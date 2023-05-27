@@ -3,6 +3,7 @@ package github
 import (
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	"github.com/google/go-github/v28/github"
@@ -10,13 +11,13 @@ import (
 
 func DownloadContent(m *github.RepositoryContent) (io.ReadCloser, error) {
 	return c.Repositories.DownloadContents(ctx,
-		"din-mukhammed", "greenfield-deploy",
+		os.Getenv("GITHUB_REPO"), "greenfield-deploy",
 		m.GetPath(), &github.RepositoryContentGetOptions{})
 }
 
 func Content(project, environment string) (map[string]*github.RepositoryContent, error) {
 	_, ff, _, err := c.Repositories.GetContents(ctx,
-		"din-mukhammed", "greenfield-deploy",
+		os.Getenv("GITHUB_REPO"), "greenfield-deploy",
 		fmt.Sprintf("deployments/%s", project),
 		&github.RepositoryContentGetOptions{})
 	if err != nil {

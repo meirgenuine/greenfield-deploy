@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
 	"sync"
 	"time"
 
@@ -66,7 +67,7 @@ func ClientSet(cfg *KubernetesConfig) (*kubernetes.Clientset, error) {
 
 	var err error
 	if cfg.IsLocal {
-		config, err := clientcmd.BuildConfigFromFlags("", "~/.kube/config")
+		config, err := clientcmd.BuildConfigFromFlags("", os.Getenv("HOME")+"/.kube/config")
 		if err != nil {
 			return nil, err
 		}
@@ -84,17 +85,10 @@ func ClientSet(cfg *KubernetesConfig) (*kubernetes.Clientset, error) {
 	return cfg.Clientset, err
 }
 
-func Deploy(cfg *KubernetesConfig, r io.ReadCloser, dry bool) error {
-	return DeployToNamespace(cfg, corev1.NamespaceDefault, r, dry)
-}
-
-func DeployToNamespace(cfg *KubernetesConfig, n string, r io.ReadCloser, dry bool) error {
+func Deploy(cfg *KubernetesConfig, n string, r io.ReadCloser) error {
 	mm, err := Manifests(r)
 	if err != nil {
 		return err
-	}
-	if dry {
-		return nil
 	}
 
 	for _, m := range mm {

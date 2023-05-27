@@ -157,7 +157,8 @@ This job runs only on a Linux (Ubuntu) environment and depends on the completion
 To interact with kubernetes Greenfield-deploy uses [k8s](https://github.com/din-mukhammed/greenfield-deploy/blob/main/pkg/k8s/k8s.go) package. As MVP, Greenfield-deploy uses config file from default location (~/.kube/config) but this project also supports approach with credentials usage (see more in [k8s.go](https://github.com/din-mukhammed/greenfield-deploy/blob/main/pkg/k8s/k8s.go#L25-L32)).
 
 ### [Kubernetes manifests](#kubernetes-manifests)
-Each project must have directory with kubernetes configs in `deployments/` folder. See more details in [official doc](https://kubernetes.io/docs/concepts/overview/working-with-objects/#:~:text=Understanding%20Kubernetes%20objects-,Kubernetes%20objects%20are%20persistent%20entities%20in%20the%20Kubernetes%20system.,running%20(and%20on%20which%20nodes)). So, for adding new project developer has to do the following steps:
+Each project must have directory with kubernetes configs in `deployments/` folder. See more details in [official doc](https://kubernetes.io/docs/concepts/overview/working-with-objects/#:~:text=Understanding%20Kubernetes%20objects-,Kubernetes%20objects%20are%20persistent%20entities%20in%20the%20Kubernetes%20system.,running%20(and%20on%20which%20nodes)). The greenfield-deploy project currently supports the following k8s objects: Deployment, Service, Pod, Job, CronJob.
+So, for adding new project developer has to do the following steps:
 1. Describe k8s manifests in folder: `deployments/<new-project-name>/` for each environment
 2. Each k8s config should start with prefix: `k8s_<environment>_`
 
@@ -176,14 +177,15 @@ Before using the bot, make sure that you have permissions to perform the deploym
     - Create k8s cluster: `kind create cluster --name greenfield`
     - Create k8s namespace: `kubectl create namespace prod`
     - Check that k8s config generated in default home path: `~/.kube/config`
-2. Run deploy server and telegram bot
+2. Fork greenfield-deploy. Get your personal github [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+3. Run deploy server and telegram bot.
 ```
 make build
-make local
+GITHUB_REPO="YOUR GITHUB LOGIN" GITHUB_TOKEN="YOUR TOKEN" ./greenfield-deploy web
 # run telegram bot in another terminal
 make bot
 ```
-3. Go ahead to deploy via [telegram](https://t.me/test_greenfield_deployment_bot).
+4. Go ahead to deploy via [telegram](https://t.me/test_greenfield_deployment_bot).
 - Send message to bot: `/deploy greenfield latest greenfield prod production`
 
 

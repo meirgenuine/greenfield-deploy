@@ -102,7 +102,7 @@ func (h deploymentService) DeployHandler(w http.ResponseWriter, r *http.Request)
 		}
 		log.Println("found manifest", "name", c.GetName(), "kind", kind, "api version", version)
 		manifest := io.NopCloser(strings.NewReader(vm.String()))
-		if err := k8s.DeployToNamespace(k8s.NewKubernetesConfigLocal(), d.Namespace, manifest, false); err != nil {
+		if err := k8s.Deploy(k8s.NewKubernetesConfigLocal(), d.Namespace, manifest); err != nil {
 			http.Error(w, fmt.Sprintf(`deploy to namespace: %s`, err), http.StatusBadRequest)
 			log.Println("[deploy]", "deploy to namespace", err)
 			continue
