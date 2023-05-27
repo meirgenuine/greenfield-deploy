@@ -2,6 +2,7 @@ package v1
 
 import (
 	"encoding/json"
+	"greenfield-deploy/pkg/github"
 	"log"
 	"net/http"
 )
@@ -34,4 +35,17 @@ func DeployHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("[deploy] deployment started: %+v", d)
+	cc, err := github.Content(d.Project, d.Environment)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("[deploy] content: %+v", cc)
+	for _, c := range cc {
+		_, err := github.DownloadContent(c)
+		if err != nil {
+			log.Printf("error on download content: %v\n", err)
+			continue
+		}
+	}
+	w.WriteHeader(http.StatusOK)
 }
