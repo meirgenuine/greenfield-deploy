@@ -66,7 +66,7 @@ func (h Handler) deploy(u User, args ...string) string {
 func (h Handler) sendRequest(body []byte) (string, error) {
 	req, err := http.NewRequest(
 		"POST",
-		fmt.Sprintf("%s/v1/deploy", h.conf.API.URL),
+		fmt.Sprintf("%s/v1/deploy", h.conf.DeploymentServiceURL),
 		bytes.NewBuffer(body),
 	)
 	if err != nil {

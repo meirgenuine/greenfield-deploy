@@ -77,8 +77,8 @@ func getListCommands() string {
 }
 
 func checkUsername(username string, conf *config.Config) bool {
-	v, ok := conf.Users.Allowed[username]
-	return ok && v == "all"
+	_, ok := conf.Users[username]
+	return ok
 }
 
 func getUser(update tgbotapi.Update) User {

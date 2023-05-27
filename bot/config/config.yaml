@@ -1,10 +1,8 @@
-api:
-  url: "http://localhost:8080"
+deployment_service_url: "http://localhost:8080"
 token: "6221589441:AAF9d72WHFXl-BB5tSOtRAtm520-zR3B1_I"
 users:
-  allowed:
-    lcongra: all
-    meirgenuine : all
-    Dinmukhammed : all 
-    dzhinchuriki : all
+  - lcongra
+  - meirgenuine
+  - Dinmukhammed 
+  - dzhinchuriki
   
