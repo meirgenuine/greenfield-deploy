@@ -29,10 +29,11 @@ func NewTgMessanger() Messenger {
 }
 
 func (b *tgbot) Notify(u User, nt Notification) error {
-	_, err := b.bot.Send(
-		tgbotapi.NewMessage(
-			int64(u.ChatID),
-			nt.String(),
-		))
+	msg := tgbotapi.NewMessage(
+		int64(u.ChatID),
+		nt.String(),
+	)
+	msg.ParseMode = tgbotapi.ModeMarkdown
+	_, err := b.bot.Send(msg)
 	return err
 }

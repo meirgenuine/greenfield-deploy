@@ -35,11 +35,12 @@ func worker(sm *semaphore.Weighted, wg *sync.WaitGroup, bot *Bot, update tgbotap
 		resp = getListCommands()
 	}
 
+	log.Println("user", user.Name, "response", resp)
 	msg := tgbotapi.NewMessage(
 		user.ChatID,
 		resp,
 	)
-	msg.ParseMode = "Markdown"
+	msg.ParseMode = tgbotapi.ModeMarkdown
 	_, err := bot.Send(msg)
 	if err != nil {
 		log.Println("send", err)
