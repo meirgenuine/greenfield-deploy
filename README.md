@@ -2,14 +2,27 @@
 This project supports greenfield's projects deployment in Kubernetes using Docker images + Github Actions as workflow.
 
 ## Table of Contents
-- [Usage](#deploy-projects-with-greenfield-deploy)
-- [How it works](#how-it-works)
-- [How to use GitHub Actions workflows](#github-actions-workflows)
-- [Container Orchestration](#container-orchestration)
-- [How to write k8s manifests](#kubernetes-manifests)
-- [Telegram Bot](#telegram-bot)
-- [Local setup](#local-setup)
-- [License](#license)
+- [greenfield-deploy](#greenfield-deploy)
+  - [Table of Contents](#table-of-contents)
+    - [Deploy projects with greenfield-deploy](#deploy-projects-with-greenfield-deploy)
+    - [How it works](#how-it-works)
+    - [GitHub Actions Workflows](#github-actions-workflows)
+    - [1. Unit Tests, Gosec and Lint Workflow](#1-unit-tests-gosec-and-lint-workflow)
+      - [Build and Unit Test Job](#build-and-unit-test-job)
+      - [Gosec Job](#gosec-job)
+      - [Golangci-lint Job](#golangci-lint-job)
+    - [2. End to End Test Workflow](#2-end-to-end-test-workflow)
+      - [End to End Test Job](#end-to-end-test-job)
+    - [3. Docker Release Workflow](#3-docker-release-workflow)
+      - [Using the Docker Image](#using-the-docker-image)
+    - [4. Release Workflow](#4-release-workflow)
+      - [Build Job](#build-job)
+      - [Release Job](#release-job)
+    - [Container Orchestration](#container-orchestration)
+    - [Kubernetes manifests](#kubernetes-manifests)
+    - [Telegram Bot](#telegram-bot)
+    - [Local setup](#local-setup)
+    - [License](#license)
 
 ### [Deploy projects with greenfield-deploy](#deploy-projects-with-greenfield-deploy)
 To deploy specific project in kubernetes cluster do the following steps:
@@ -185,7 +198,7 @@ Request looks like this:
 /deploy <project> <version> <cluster> <namespace> <env>
 ```
 
-It deploys a project with name \<project\> (greenfield), version \<version\>(ex. latest) to kubernetes cluster \<cluster\> with namespace \<namespace\> and environment \<env\> (ex. staging, production).
+It deploys a project with name \<project\> (greenfield), version \<version\>(ex. latest), cluster \<cluster\>, namespace \<namespace\> and environment \<env\> (ex. dev, prod). Deployment status will be sent as response to the user.
 
 Before using the bot, make sure that you have permissions to perform the deployment. New users are added via a pull request. To add a new user you should create a pull request and write his telegram username to config.yaml `PROJECT_DIR/bot/config/config.yaml` \<username\>.
 
