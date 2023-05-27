@@ -1,6 +1,7 @@
 # greenfield-deploy
 
-```
-make build
-make local
-```
+## Tests
+
+
+## Deploy
+
