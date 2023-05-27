@@ -40,12 +40,12 @@ Our main approach was to follow the concept: [Infrastructure As Code](https://ww
 
 The full working flow contains of 2 main steps:
 1. Testing flow
-
+![TestingFlow](https://github.com/din-mukhammed/greenfield-deploy/assets/52813950/40afd4cd-0288-43ef-9f76-b278bb0ae319)
 
 On each PR to the main branch of the specific project Github Actions starts running all checks (tests, linters, etc...). After successfull checks Github Actions builds and pushes new docker image to docker container registry.
 
 2. Deployment flow
-
+![DeploymentFlow](https://github.com/din-mukhammed/greenfield-deploy/assets/52813950/add5b94e-9172-4f3a-8983-feee2d0fc51a)
 
 Developer can deploy this server via the Telegram Bot by sending message to it. Greenfield-deploy service receives the message from Telegram Bot and downloads k8s manifests from the greenfield-deploy repo. As the last step, Greenfield-deploy service applies downloaded k8s manifests with specific version to Kubernetes Cluster.
 
