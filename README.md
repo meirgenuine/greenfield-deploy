@@ -165,7 +165,7 @@ So, for adding new project developer has to do the following steps:
 
 ### [Telegram Bot](#telegram-bot)
 
-Project has a telegram bot that provides deploying operations. It allows you to run applications from created images.
+The project has a telegram bot that provides deploying operations. It allows you to run applications from created images.
 The bot sends a request to the deployment service. The request contains all information about image that you want to deploy.
 Before using the bot, make sure that you have permissions to perform the deployment. New users are added via a pull request. To add a new user you should create a pull request and write his telegram username to config.yaml `PROJECT_DIR/bot/config/config.yaml` \<username\> : all. 
 

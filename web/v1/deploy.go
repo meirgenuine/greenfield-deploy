@@ -60,7 +60,7 @@ func (h deploymentService) DeployHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// todo it can takes a lot of time
+	// todo it can take a lot of time
 	// so we have to add worker pool, and
 	// immediately return a like 'pending'
 	log.Printf("[deploy] deployment started: %+v", d)
