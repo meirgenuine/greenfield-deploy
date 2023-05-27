@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: greenfield
+  namespace: prod
+spec:
+  containers:
+  - name: command-demo-container
+    image: ghcr.io/bnb-chain/greenfield:0.2.1-alpha.1
+    command: ["/bin/sh","-c"]
+    args: ["./gnfd init some_monicker --home . && ./gnfd gentx --help --home ."]
+    # args: ["make build; ./deployment/localup/localup.sh all  3 3"]
+    imagePullPolicy: Always
+  restartPolicy: OnFailure
