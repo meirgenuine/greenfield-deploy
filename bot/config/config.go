@@ -50,7 +50,7 @@ func Load(path string) *Config {
 	for _, v := range names {
 		name, ok := v.(string)
 		if !ok {
-			log.Fatal("invalid username", name)
+			log.Fatal("invalid username", v)
 		}
 		users[name] = struct{}{}
 	}
