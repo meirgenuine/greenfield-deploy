@@ -2,7 +2,7 @@
 
 ## GitHub Actions Workflows
 
-This repository utilizes several GitHub Actions workflows to automate common tasks. Below is a brief description of the workflows and how they operate.
+[This repository](https://github.com/meirgenuine/greenfield) utilizes several GitHub Actions workflows to automate common tasks. Below is a brief description of the workflows and how they operate.
 
 ### 1. Unit Tests, Gosec and Lint Workflow
 
