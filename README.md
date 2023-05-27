@@ -4,7 +4,7 @@ This project supports greenfield's projects deployment in Kubernetes using Docke
 ## Table of Contents
 - [Usage](#deploy-projects-with-greenfield-deploy)
 - [How it works](#how-it-works)
-- [How to use GitHub Actions workflows](#github-actions)
+- [How to use GitHub Actions workflows](#github-actions-workflows)
 - [How to write k8s manifests](#kubernetes-manifests)
 - [Telegram Bot](#telegram-bot)
 - [Local setup](#local-setup)
@@ -12,7 +12,7 @@ This project supports greenfield's projects deployment in Kubernetes using Docke
 
 ### [Deploy projects with greenfield-deploy](#deploy-projects-with-greenfield-deploy)
 To deploy specific project in kubernetes cluster do the following steps:
-1. Be sure that all tests are passed and docker image is pushed into container registry. (See [How to use GitHub Actions workflows](#github-actions))
+1. Be sure that all tests are passed and docker image is pushed into container registry. (See [How to use GitHub Actions workflows](#github-actions-workflows))
 2. Send message to [Telegram Bot](#bot) with required parameters.
 3. Receive message from bot about deployment status.
 4. Double check that deployment succeeded by:
@@ -23,7 +23,7 @@ $ kubectl get pods -n <namespace>
 ### [How it works](#how-it-works)
 On each PR to the main branch of the specific project Github Actions starts running all checks (tests, linters, etc...). After successfull checks Github Actions builds and pushes new docker image to docker container registry. Afterwards, developer who is reponsible for that commit can deploy this server via the Telegram Bot by sending message to it. Greenfield-deploy service receives the message from Telegram Bot and downloads k8s manifests from the repo. As the last step, Greenfield-deploy service applies this k8s manifests with specific version to Kubernetes Cluster.
 
-### [GitHub Actions Workflows](#github-actions)
+### [GitHub Actions Workflows](#github-actions-workflows)
 
 [This repository](https://github.com/meirgenuine/greenfield) utilizes several GitHub Actions workflows to automate common tasks. Below is a brief description of the workflows and how they operate.
 
