@@ -60,6 +60,9 @@ func (h deploymentService) DeployHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	// todo it can takes a lot of time
+	// so we have to add worker pool, and
+	// immediately return a like 'pending'
 	log.Printf("[deploy] deployment started: %+v", d)
 	cc, err := github.Content(d.Project, d.Environment)
 	if err != nil {
@@ -106,6 +109,7 @@ func (h deploymentService) DeployHandler(w http.ResponseWriter, r *http.Request)
 		}
 	}
 	w.WriteHeader(http.StatusOK)
+	// we use direct access to the bot (see todo above)
 	h.Notify(d, "successfully deployed")
 }
 
