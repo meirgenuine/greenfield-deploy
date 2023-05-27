@@ -76,7 +76,7 @@ func DeployHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Println("found manifest", "name", c.GetName(), "kind", kind, "api version", version)
 		manifest := io.NopCloser(strings.NewReader(vm.String()))
-		if err := k8s.DeployToNamespace(k8s.NewKubernetesConfigLocal(), "prod", manifest, false); err != nil {
+		if err := k8s.DeployToNamespace(k8s.NewKubernetesConfigLocal(), d.Namespace, manifest, false); err != nil {
 			log.Fatal(err)
 		}
 	}
