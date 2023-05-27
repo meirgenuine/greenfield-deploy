@@ -54,6 +54,7 @@ As an example greenfield-deploy project contains workflow for greenfield project
 ### [GitHub Actions Workflows](#github-actions-workflows)
 
 [This repository](https://github.com/meirgenuine/greenfield) utilizes several GitHub Actions workflows to automate common tasks. Below is a brief description of the workflows and how they operate.
+![image](https://github.com/din-mukhammed/greenfield-deploy/assets/52813950/e9ea414e-e6cc-45b9-8d37-96eac2ff430c)
 
 ### 1. Unit Tests, Gosec and Lint Workflow
 
