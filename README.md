@@ -4,7 +4,7 @@ This project supports greenfield's projects deployment in Kubernetes using Docke
 ## Table of Contents
 - [Usage](#deploy-projects-with-greenfield-deploy)
 - [How it works](#how-it-works)
-- [How to write tests with Github Actions](#actions)
+- [How Github Actions workflows work](#github-actions)
 - [How to write k8s manifests](#kubernetes-manifests)
 - [Telegram Bot](#telegram-bot)
 - [Local setup](#local-setup)
@@ -23,7 +23,7 @@ $ kubectl get pods -n <namespace>
 ### [How it works](#how-it-works)
 On each PR to the main branch of the specific project Github Actions starts running all checks (tests, linters, etc...). After successfull checks Github Actions builds and pushes new docker image to docker container registry. Afterwards, developer who is reponsible for that commit can deploy this server via the Telegram Bot by sending message to it. Greenfield-deploy service receives the message from Telegram Bot and downloads k8s manifests from the repo. As the last step, Greenfield-deploy service applies this k8s manifests with specific version to Kubernetes Cluster.
 
-### [GitHub Actions Workflows](#actions)
+### [GitHub Actions Workflows](#github-actions)
 
 [This repository](https://github.com/meirgenuine/greenfield) utilizes several GitHub Actions workflows to automate common tasks. Below is a brief description of the workflows and how they operate.
 
