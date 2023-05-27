@@ -173,7 +173,8 @@ make local
 # run telegram bot in another terminal
 make bot
 ```
-Go ahead to deploy via [telegram](https://t.me/test_greenfield_deployment_bot)
+3. Go ahead to deploy via [telegram](https://t.me/test_greenfield_deployment_bot).
+- Send message to bot: `/deploy greenfield latest greenfield prod production`
 
 
 ### [License](#license)
