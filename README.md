@@ -44,7 +44,30 @@ This job runs the Golangci-lint linter on the codebase. Here's what happens duri
 
 *This workflow ensures that the codebase is secure, correctly linted, and passes all unit tests on every commit or pull request, thereby maintaining the quality and reliability of the codebase.*
 
-### 2. Docker Release Workflow
+### 2. End to End Test Workflow
+
+This workflow comprises a single job named end-to-end-test. It aims to run end-to-end tests on the codebase.
+
+The workflow is triggered on every push to the **master** or **develop** branches and on every new pull request.
+
+Environment Variables and Secrets
+- GH_ACCESS_TOKEN: GitHub access token used for cloning and downloading Go modules. Stored as a GitHub Secret.
+
+#### End to End Test Job
+
+This job is responsible for running end-to-end tests on the application. Here's what happens during this job:
+1. **Install Go:** The appropriate Go version, specified in the matrix, is installed on the runner.
+2. **Checkout Code:** The latest code is checked out from the repository.
+3. **Setup Caching:** A cache is set up for Go modules and build cache. This speeds up the setup process by avoiding the re-download of dependencies that have not changed.
+4. **Setup GitHub Token:** The GitHub token is configured to allow fetching of private Go modules.
+5. **Build:** The code is built using the make build command. This command compiles the Go code and generates executable binaries.
+6. **Start E2E Local Chain:** A local blockchain is started using the make e2e_start_localchain command. This local chain is used in the subsequent end-to-end tests. A delay of 5 seconds is introduced to ensure that the local chain has enough time to start up properly.
+7. **Run E2E Test:** End-to-end tests are run using the make e2e_test command. These tests interact with the local blockchain started in the previous step, simulating real-world user interactions.
+
+*This workflow ensures that the application functions as expected from an end-to-end perspective. It verifies the integration between different parts of the application and helps in detecting issues that unit tests might miss.*
+
+
+### 3. Docker Release Workflow
 
 The Docker Release workflow is responsible for building and pushing Docker images to Docker Hub.
 
@@ -69,33 +92,9 @@ After the workflow completes, the Docker image will be available on Docker Hub t
 
 ```(bash)
 docker pull meirgenuine/greenfield:COMMIT_SHA
-docker run -d -p 8080:8080 meirgenuine/greenfield:COMMIT_SHA
 ```
 
 *This workflow allows us to automatically build and publish Docker images for every commit, providing immutable and traceable deployments.*
-
-
-### 3. End to End Test Workflow
-
-This workflow comprises a single job named end-to-end-test. It aims to run end-to-end tests on the codebase.
-
-The workflow is triggered on every push to the **master** or **develop** branches and on every new pull request.
-
-Environment Variables and Secrets
-- GH_ACCESS_TOKEN: GitHub access token used for cloning and downloading Go modules. Stored as a GitHub Secret.
-
-#### End to End Test Job
-
-This job is responsible for running end-to-end tests on the application. Here's what happens during this job:
-1. **Install Go:** The appropriate Go version, specified in the matrix, is installed on the runner.
-2. **Checkout Code:** The latest code is checked out from the repository.
-3. **Setup Caching:** A cache is set up for Go modules and build cache. This speeds up the setup process by avoiding the re-download of dependencies that have not changed.
-4. **Setup GitHub Token:** The GitHub token is configured to allow fetching of private Go modules.
-5. **Build:** The code is built using the make build command. This command compiles the Go code and generates executable binaries.
-6. **Start E2E Local Chain:** A local blockchain is started using the make e2e_start_localchain command. This local chain is used in the subsequent end-to-end tests. A delay of 5 seconds is introduced to ensure that the local chain has enough time to start up properly.
-7. **Run E2E Test:** End-to-end tests are run using the make e2e_test command. These tests interact with the local blockchain started in the previous step, simulating real-world user interactions.
-
-*This workflow ensures that the application functions as expected from an end-to-end perspective. It verifies the integration between different parts of the application and helps in detecting issues that unit tests might miss.*
 
 
 ### 4. Release Workflow
