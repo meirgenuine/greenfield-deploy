@@ -23,7 +23,18 @@ $ kubectl get pods -n <namespace>
 ```
 
 ### [How it works](#how-it-works)
-On each PR to the main branch of the specific project Github Actions starts running all checks (tests, linters, etc...). After successfull checks Github Actions builds and pushes new docker image to docker container registry. Afterwards, developer who is reponsible for that commit can deploy this server via the Telegram Bot by sending message to it. Greenfield-deploy service receives the message from Telegram Bot and downloads k8s manifests from the repo. As the last step, Greenfield-deploy service applies this k8s manifests with specific version to Kubernetes Cluster.
+Our main approach was to follow the concept: [Infrastructure As Code](https://www.redhat.com/en/topics/automation/what-is-infrastructure-as-code-iac#:~:text=choose%20Red%20Hat%3F-,Overview,to%20edit%20and%20distribute%20configurations.). The greenfield-deploy project supports deployment k8s manifests to kubernetes cluster. Each greenfield project can be described as a set of k8s manifests. So, greenfield-deploy project is a single storage which contains all greenfield projects manifests.
+
+The full working flow contains of 2 main steps:
+1. Testing flow
+
+
+On each PR to the main branch of the specific project Github Actions starts running all checks (tests, linters, etc...). After successfull checks Github Actions builds and pushes new docker image to docker container registry.
+
+2. Deployment flow
+
+
+Developer can deploy this server via the Telegram Bot by sending message to it. Greenfield-deploy service receives the message from Telegram Bot and downloads k8s manifests from the greenfield-deploy repo. As the last step, Greenfield-deploy service applies downloaded k8s manifests with specific version to Kubernetes Cluster.
 
 As an example greenfield-deploy project contains workflow for greenfield project.
 
