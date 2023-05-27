@@ -21,7 +21,7 @@ $ kubectl get pods -n <namespace>
 ```
 
 ### [How it works](#how-it-works)
-On each PR to the main branch of the specific project Github Actions starts running all checks(tests, linters, ...). After successfull checks Github Actions builds and pushes new docker image to docker container registry. Afterwards, developer how is reponsible for that commit can deploy this server via the Telegram Bot by sending message to it. Greenfield-deploy service receives the message from Telegram Bot and downloads k8s manifests from the repo. As the last step, Greenfield-deploy service applies this k8s manifests with specific version to Kubernetes Cluster.
+On each PR to the main branch of the specific project Github Actions starts running all checks (tests, linters, etc...). After successfull checks Github Actions builds and pushes new docker image to docker container registry. Afterwards, developer who is reponsible for that commit can deploy this server via the Telegram Bot by sending message to it. Greenfield-deploy service receives the message from Telegram Bot and downloads k8s manifests from the repo. As the last step, Greenfield-deploy service applies this k8s manifests with specific version to Kubernetes Cluster.
 
 ### [GitHub Actions Workflows](#actions)
 
