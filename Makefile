@@ -10,6 +10,10 @@ fmt:
 local:
 	LOGXI=* GITHUB_TOKEN=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 ./greenfield-deploy web
 
+.PHONY: bot
+bot:
+	cd telegram_bot && go run .
+
 .PHONY: build
 build:
 	CGO_ENABLED=0 go build -v .

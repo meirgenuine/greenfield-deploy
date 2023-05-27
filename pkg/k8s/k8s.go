@@ -66,7 +66,7 @@ func ClientSet(cfg *KubernetesConfig) (*kubernetes.Clientset, error) {
 
 	var err error
 	if cfg.IsLocal {
-		config, err := clientcmd.BuildConfigFromFlags("", "./config")
+		config, err := clientcmd.BuildConfigFromFlags("", "~/.kube/config")
 		if err != nil {
 			return nil, err
 		}

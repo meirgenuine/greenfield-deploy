@@ -159,9 +159,17 @@ Berda
 
 
 ### [Local setup](#local-setup)
-Run deploy server and telegram bot
+1. Create kubernetes cluster and namespace only once
+    - Install [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
+    - Install [kind](https://kind.sigs.k8s.io/) tool
+    - Create k8s cluster: `kind create cluster --name greenfield`
+    - Create k8s namespace: `kubectl create namespace prod`
+    - Check that k8s config generated in default home path: `~/.kube/config`
+2. Run deploy server and telegram bot
 ```
 make build
 make local
-# run telegram bot
+# run telegram bot in another terminal
+make bot
 ```
+Go ahead to deploy via [telegram](https://t.me/test_greenfield_deployment_bot)
