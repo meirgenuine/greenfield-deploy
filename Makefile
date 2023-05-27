@@ -12,7 +12,7 @@ local:
 
 .PHONY: bot
 bot:
-	cd telegram_bot && go run .
+	cd bot && go run .
 
 .PHONY: build
 build:
