@@ -1,10 +1,15 @@
 package v1
 
 import (
+	"bufio"
 	"encoding/json"
+	"fmt"
 	"greenfield-deploy/pkg/github"
+	"greenfield-deploy/pkg/k8s"
+	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type Deployment struct {
@@ -41,10 +46,38 @@ func DeployHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Printf("[deploy] content: %+v", cc)
 	for _, c := range cc {
-		_, err := github.DownloadContent(c)
+		r, err := github.DownloadContent(c)
 		if err != nil {
 			log.Printf("error on download content: %v\n", err)
 			continue
+		}
+
+		var (
+			kind, version string
+			vm            strings.Builder
+		)
+		s := bufio.NewScanner(r)
+		for s.Scan() {
+			var l = s.Text()
+			switch {
+			case strings.Contains(l, "apiVersion:"):
+				version = l
+				fallthrough
+			case strings.Contains(l, "kind:"):
+				kind = l
+				fallthrough
+			case !strings.Contains(l, "image:"):
+				vm.WriteString(l)
+				vm.WriteString("\n")
+				continue
+			}
+			vm.WriteString(strings.ReplaceAll(l, ":latest", fmt.Sprintf(":%s", d.Version)))
+			vm.WriteString("\n")
+		}
+		log.Println("found manifest", "name", c.GetName(), "kind", kind, "api version", version)
+		manifest := io.NopCloser(strings.NewReader(vm.String()))
+		if err := k8s.DeployToNamespace(k8s.NewKubernetesConfigLocal(), "prod", manifest, false); err != nil {
+			log.Fatal(err)
 		}
 	}
 	w.WriteHeader(http.StatusOK)

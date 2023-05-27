@@ -8,7 +8,7 @@ fmt:
 
 .PHONY: local
 local:
-	LOGXI=* ./greenfield-deploy web
+	LOGXI=* GITHUB_TOKEN=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 ./greenfield-deploy web
 
 .PHONY: build
 build:
