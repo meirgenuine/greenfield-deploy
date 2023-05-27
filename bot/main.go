@@ -66,5 +66,5 @@ func getCommand(text string) (string, []string) {
 
 func getListCommands() string {
 	// todo rename args
-	return "Available commands:\n\t/deploy arg1 arg2\n"
+	return "Available commands:\n\t/deploy <project> <version> <cluster> <namespace> <env>\n"
 }

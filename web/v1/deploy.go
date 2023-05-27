@@ -33,5 +33,5 @@ func DeployHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("[deploy]", "deployment started:", d)
+	log.Printf("[deploy] deployment started: %+v", d)
 }

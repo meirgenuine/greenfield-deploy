@@ -2,6 +2,9 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
+	web "greenfield-deploy/web/v1"
 	"io"
 	"log"
 	"net/http"
@@ -25,23 +28,35 @@ func (h Handler) Start() string {
 }
 
 func (h Handler) Deploy(args ...string) string {
-	if len(args) < 2 {
+	if len(args) < 6 {
 		return "invalid args"
 	}
 
-	resp, err := h.sendRequest("")
+	d := web.Deployment{
+		Project:     args[1],
+		Version:     args[2],
+		Cluster:     args[3],
+		Namespace:   args[4],
+		Environment: args[5],
+	}
+	body, err := json.Marshal(d)
 	if err != nil {
-		resp = err.Error()
-		log.Printf("deploy failed, args: %v, resp: %s\n", args, resp)
+		log.Printf("deploy failed, args: %v, resp: %s\n", args, err)
+		return err.Error()
+	}
+	resp, err := h.sendRequest(body)
+	if err != nil {
+		log.Printf("deploy failed, args: %v, resp: %s\n", args, err)
+		return err.Error()
 	}
 	return resp
 }
 
-func (h Handler) sendRequest(message string) (string, error) {
+func (h Handler) sendRequest(body []byte) (string, error) {
 	req, err := http.NewRequest(
 		"POST",
-		h.conf.API.URL,
-		bytes.NewBufferString(message),
+		fmt.Sprintf("%s/v1/deploy", h.conf.API.URL),
+		bytes.NewBuffer(body),
 	)
 	if err != nil {
 		return "", err
@@ -53,7 +68,7 @@ func (h Handler) sendRequest(message string) (string, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	body, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}
