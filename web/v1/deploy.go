@@ -120,7 +120,7 @@ func (h deploymentService) Notify(r DeployRequest, message string) {
 		},
 		notification.Notification{
 			Message: fmt.Sprintf(
-				"%s:\nProject: %s\nVersion: %s\nCluster: %s\nNamespace: %s\nEnv: %s",
+				"%s:\n```Project: %s\nVersion: %s\nCluster: %s\nNamespace: %s\nEnv: %s```",
 				message,
 				r.Project,
 				r.Version,
