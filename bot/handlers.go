@@ -4,37 +4,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"greenfield-deploy/bot/config"
 	web "greenfield-deploy/web/v1"
 	"io"
 	"log"
 	"net/http"
 )
 
-type Handler struct {
-	client *http.Client
-	conf   *config.Config
-}
-
-func NewHandler(conf *config.Config) *Handler {
-	return &Handler{
-		// todo config client
-		client: &http.Client{},
-		conf:   conf,
-	}
-}
-
-func (h Handler) Start() string {
+func (b Bot) StartHandler() string {
 	return getListCommands()
 }
 
-func (h Handler) Deploy(u User, args ...string) string {
-	// todo add workerpool
-	// it can take more time
-	return h.deploy(u, args...)
-}
-
-func (h Handler) deploy(u User, args ...string) string {
+func (b Bot) DeployHandler(u User, args ...string) string {
 	if len(args) < 6 {
 		return "invalid args"
 	}
@@ -55,7 +35,7 @@ func (h Handler) deploy(u User, args ...string) string {
 		log.Printf("deploy failed, args: %v, resp: %s\n", args, err)
 		return err.Error()
 	}
-	resp, err := h.sendRequest(body)
+	resp, err := b.sendRequest(body)
 	if err != nil {
 		log.Printf("deploy failed, args: %v, resp: %s\n", args, err)
 		return err.Error()
@@ -63,17 +43,17 @@ func (h Handler) deploy(u User, args ...string) string {
 	return resp
 }
 
-func (h Handler) sendRequest(body []byte) (string, error) {
+func (b *Bot) sendRequest(body []byte) (string, error) {
 	req, err := http.NewRequest(
 		"POST",
-		fmt.Sprintf("%s/v1/deploy", h.conf.DeploymentServiceURL),
+		fmt.Sprintf("%s/v1/deploy", b.conf.DeploymentServiceURL),
 		bytes.NewBuffer(body),
 	)
 	if err != nil {
 		return "", err
 	}
 
-	resp, err := h.client.Do(req)
+	resp, err := b.client.Do(req)
 	if err != nil {
 		return "", err
 	}
