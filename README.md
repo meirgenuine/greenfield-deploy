@@ -4,7 +4,7 @@ This project supports greenfield's projects deployment in Kubernetes using Docke
 ## Table of Contents
 - [Usage](#deploy-projects-with-greenfield-deploy)
 - [How it works](#how-it-works)
-- [How Github Actions workflows work](#github-actions)
+- [How to use GitHub Actions workflows](#github-actions)
 - [How to write k8s manifests](#kubernetes-manifests)
 - [Telegram Bot](#telegram-bot)
 - [Local setup](#local-setup)
@@ -12,7 +12,7 @@ This project supports greenfield's projects deployment in Kubernetes using Docke
 
 ### [Deploy projects with greenfield-deploy](#deploy-projects-with-greenfield-deploy)
 To deploy specific project in kubernetes cluster do the following steps:
-1. Be sure that all tests are passed and docker image is pushed into container registry. (See [How to write tests with Github Actions](#actions))
+1. Be sure that all tests are passed and docker image is pushed into container registry. (See [How to use GitHub Actions workflows](#github-actions))
 2. Send message to [Telegram Bot](#bot) with required parameters.
 3. Receive message from bot about deployment status.
 4. Double check that deployment succeeded by:
