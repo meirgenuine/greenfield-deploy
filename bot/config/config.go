@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"log"
@@ -11,14 +11,19 @@ type APIConfig struct {
 	URL string `yaml:"url"`
 }
 
-type Config struct {
-	BotToken string    `yaml:"token"`
-	API      APIConfig `yaml:"api"`
+type UsersConfig struct {
+	Allowed map[string]string `yaml:"allowed"`
 }
 
-func LoadConfig() *Config {
+type Config struct {
+	BotToken string      `yaml:"token"`
+	API      APIConfig   `yaml:"api"`
+	Users    UsersConfig `yaml:"users"`
+}
+
+func Load(path string) *Config {
 	// Open the configuration file
-	file, err := os.Open("config.yaml")
+	file, err := os.Open(path)
 	if err != nil {
 		log.Fatal(err)
 	}

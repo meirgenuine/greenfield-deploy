@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"greenfield-deploy/bot/config"
 	web "greenfield-deploy/web/v1"
 	"io"
 	"log"
@@ -12,10 +13,10 @@ import (
 
 type Handler struct {
 	client *http.Client
-	conf   *Config
+	conf   *config.Config
 }
 
-func NewHandler(conf *Config) *Handler {
+func NewHandler(conf *config.Config) *Handler {
 	return &Handler{
 		// todo config client
 		client: &http.Client{},
@@ -27,17 +28,27 @@ func (h Handler) Start() string {
 	return getListCommands()
 }
 
-func (h Handler) Deploy(args ...string) string {
+func (h Handler) Deploy(u User, args ...string) string {
+	// todo add workerpool
+	// it can take more time
+	return h.deploy(u, args...)
+}
+
+func (h Handler) deploy(u User, args ...string) string {
 	if len(args) < 6 {
 		return "invalid args"
 	}
 
-	d := web.Deployment{
-		Project:     args[1],
-		Version:     args[2],
-		Cluster:     args[3],
-		Namespace:   args[4],
-		Environment: args[5],
+	d := web.DeployRequest{
+		Username: u.Name,
+		ChatID:   u.ChatID,
+		Deployment: web.Deployment{
+			Project:     args[1],
+			Version:     args[2],
+			Cluster:     args[3],
+			Namespace:   args[4],
+			Environment: args[5],
+		},
 	}
 	body, err := json.Marshal(d)
 	if err != nil {

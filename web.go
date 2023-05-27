@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"greenfield-deploy/pkg/middleware"
+	"greenfield-deploy/pkg/notification"
 	v1 "greenfield-deploy/web/v1"
 	"net/http"
 	"os"
@@ -48,7 +50,11 @@ var (
 				log.Info("web server terminated")
 			}()
 
-			router.HandleFunc("/v1/deploy", v1.DeployHandler).Methods("POST")
+			messenger := notification.NewTgMessanger()
+			service := v1.NewHandler(messenger)
+			deployHandler := middleware.HandlePanics(service.DeployHandler)
+
+			router.HandleFunc("/v1/deploy", deployHandler).Methods("POST")
 
 			log.Info("starting web server", "addr", ":8080")
 			if err := web.ListenAndServe(); err != http.ErrServerClosed {

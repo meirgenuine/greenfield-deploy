@@ -4,11 +4,13 @@ import (
 	"log"
 	"strings"
 
+	"greenfield-deploy/bot/config"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 func main() {
-	conf := LoadConfig()
+	conf := config.Load("config/config.yaml")
 	bot, err := tgbotapi.NewBotAPI(conf.BotToken)
 	if err != nil {
 		log.Fatal(err)
@@ -32,6 +34,11 @@ func main() {
 		if update.Message == nil {
 			continue
 		}
+		user := getUser(update)
+		if !checkUsername(user.Name, conf) {
+			log.Println("unknown person", user.Name)
+			continue
+		}
 
 		cmd, args := getCommand(update.Message.Text)
 
@@ -40,14 +47,14 @@ func main() {
 		case "/start":
 			resp = handler.Start()
 		case "/deploy":
-			resp = handler.Deploy(args...)
+			resp = handler.Deploy(user, args...)
 		default:
 			resp = getListCommands()
 		}
 
 		_, err = bot.Send(
 			tgbotapi.NewMessage(
-				update.Message.Chat.ID,
+				user.ChatID,
 				resp,
 			))
 		if err != nil {
@@ -67,4 +74,16 @@ func getCommand(text string) (string, []string) {
 func getListCommands() string {
 	// todo rename args
 	return "Available commands:\n\t/deploy <project> <version> <cluster> <namespace> <env>\n"
+}
+
+func checkUsername(username string, conf *config.Config) bool {
+	v, ok := conf.Users.Allowed[username]
+	return ok && v == "all"
+}
+
+func getUser(update tgbotapi.Update) User {
+	return User{
+		Name:   update.Message.Chat.UserName,
+		ChatID: update.Message.Chat.ID,
+	}
 }
