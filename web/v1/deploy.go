@@ -110,7 +110,7 @@ func (h deploymentService) DeployHandler(w http.ResponseWriter, r *http.Request)
 	}
 	w.WriteHeader(http.StatusOK)
 	// we use direct access to the bot (see todo above)
-	h.Notify(d, "successfully deployed")
+	h.Notify(d, "Successfully deployed")
 }
 
 func (h deploymentService) Notify(r DeployRequest, message string) {
