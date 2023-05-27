@@ -52,11 +52,12 @@ func main() {
 			resp = getListCommands()
 		}
 
-		_, err = bot.Send(
-			tgbotapi.NewMessage(
-				user.ChatID,
-				resp,
-			))
+		msg := tgbotapi.NewMessage(
+			user.ChatID,
+			resp,
+		)
+		msg.ParseMode = "Markdown"
+		_, err = bot.Send(msg)
 		if err != nil {
 			log.Println("send", err)
 		}
