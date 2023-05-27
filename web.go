@@ -48,7 +48,7 @@ var (
 				log.Info("web server terminated")
 			}()
 
-			router.HandleFunc("/v1/deploy", v1.DeployHandler)
+			router.HandleFunc("/v1/deploy", v1.DeployHandler).Methods("POST")
 
 			log.Info("starting web server", "addr", ":8080")
 			if err := web.ListenAndServe(); err != http.ErrServerClosed {
