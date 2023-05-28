@@ -1,89 +1,66 @@
 package main
 
 import (
+	"context"
 	"log"
-	"strings"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
 
 	"greenfield-deploy/bot/config"
 
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"golang.org/x/sync/semaphore"
 )
+
+var MaxWorkersNum = int64(10)
 
 func main() {
 	conf := config.Load("config/config.yaml")
-	bot, err := tgbotapi.NewBotAPI(conf.BotToken)
+
+	bot, err := NewBot(conf)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	bot.Debug = false
-
-	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 60
-
-	updates, err := bot.GetUpdatesChan(u)
+	updates, err := bot.Channel()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	handler := NewHandler(conf)
+	log.Printf("authorized on account %s", bot.UserName())
 
-	log.Printf("authorized on account %s", bot.Self.UserName)
+	ctx, cancel := context.WithCancel(context.Background())
 
-	for update := range updates {
-		if update.Message == nil {
-			continue
-		}
-		user := getUser(update)
-		if !checkUsername(user.Name, conf) {
-			log.Println("unknown person", user.Name)
-			continue
-		}
+	go initShutdown(cancel)
 
-		cmd, args := getCommand(update.Message.Text)
+	// workerpool
+	sm := semaphore.NewWeighted(MaxWorkersNum)
+	var wg sync.WaitGroup
+	for {
+		select {
+		case <-ctx.Done():
+			wg.Wait()
+			return
+		case update := <-updates:
+			if update.Message == nil {
+				continue
+			}
 
-		var resp string
-		switch cmd {
-		case "/start":
-			resp = handler.Start()
-		case "/deploy":
-			resp = handler.Deploy(user, args...)
-		default:
-			resp = getListCommands()
-		}
-
-		_, err = bot.Send(
-			tgbotapi.NewMessage(
-				user.ChatID,
-				resp,
-			))
-		if err != nil {
-			log.Println("send", err)
+			if err := sm.Acquire(ctx, 1); err != nil {
+				log.Println(err)
+				continue
+			}
+			wg.Add(1)
+			go worker(sm, &wg, bot, update)
 		}
 	}
 }
 
-func getCommand(text string) (string, []string) {
-	args := strings.Split(text, " ")
-	if len(args) < 1 {
-		return text, nil
-	}
-	return args[0], args
-}
-
-func getListCommands() string {
-	// todo rename args
-	return "Available commands:\n\t/deploy <project> <version> <cluster> <namespace> <env>\n"
-}
-
-func checkUsername(username string, conf *config.Config) bool {
-	_, ok := conf.Users[username]
-	return ok
-}
-
-func getUser(update tgbotapi.Update) User {
-	return User{
-		Name:   update.Message.Chat.UserName,
-		ChatID: update.Message.Chat.ID,
-	}
+func initShutdown(cancel context.CancelFunc) {
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, os.Interrupt)
+	signal.Notify(signalChan, syscall.SIGTERM)
+	log.Println("shutdown by signal", <-signalChan)
+	cancel()
 }

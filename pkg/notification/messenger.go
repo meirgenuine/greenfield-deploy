@@ -3,6 +3,7 @@ package notification
 import (
 	"greenfield-deploy/bot/config"
 	"log"
+	"sync"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
@@ -12,6 +13,7 @@ type Messenger interface {
 }
 
 type tgbot struct {
+	mu  sync.Mutex
 	bot *tgbotapi.BotAPI
 }
 
@@ -29,10 +31,14 @@ func NewTgMessanger() Messenger {
 }
 
 func (b *tgbot) Notify(u User, nt Notification) error {
-	_, err := b.bot.Send(
-		tgbotapi.NewMessage(
-			int64(u.ChatID),
-			nt.String(),
-		))
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	msg := tgbotapi.NewMessage(
+		int64(u.ChatID),
+		nt.String(),
+	)
+	msg.ParseMode = tgbotapi.ModeMarkdown
+	// todo send is thread-safe?
+	_, err := b.bot.Send(msg)
 	return err
 }
