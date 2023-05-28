@@ -24,6 +24,7 @@ This project supports greenfield's projects deployment in Kubernetes using Docke
     - [Local setup](#local-setup)
     - [License](#license)
 
+
 ### [Deploy projects with greenfield-deploy](#deploy-projects-with-greenfield-deploy)
 To deploy specific project in kubernetes cluster do the following steps:
 1. Be sure that all tests are passed and docker image is pushed into container registry. (See [How to use GitHub Actions workflows](#github-actions-workflows))
