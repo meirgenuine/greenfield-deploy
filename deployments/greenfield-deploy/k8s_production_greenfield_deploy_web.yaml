@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greenfield-deploy
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: greenfield-deploy-web
+  template:
+    metadata:
+      labels:
+        app: greenfield-deploy-web
+    spec:
+      containers:
+        - name: greenfield-deploy-web
+          resources:
+            requests:
+              cpu: 0.01
+              memory: 30Mi
+          image: meirgenuine/greenfield-deploy:latest
+          imagePullPolicy: Always
+          command: ["./greenfield-deploy web"]
+          env:
+            - name: "GITHUB_REPO"
+              value: "din-mukhammed"
+            - name: "GITHUB_TOKEN"
+              valueFrom:
+                secretKeyRef:
+                  name: github-token
+                  key: token
+            - name: "LOGXI"
+              value: "*"
+          livenessProbe:
+            httpGet:
+              path: /v1/_health
+              port: 80
+          readinessProbe:
+            httpGet:
+              path: /v1/_health
+              port: 80

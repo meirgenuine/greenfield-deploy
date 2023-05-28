@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greenfield-deploy-bot
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: greenfield-deploy-bot
+  template:
+    metadata:
+      labels:
+        app: greenfield-deploy-bot
+    spec:
+      containers:
+        - name: greenfield-deploy-bot
+          resources:
+            requests:
+              cpu: 0.01
+              memory: 30Mi
+          image: meirgenuine/greenfield-deploy-bot:latest
+          imagePullPolicy: Always
+          command: ["./bot"]
+          env:
+            - name: "LOGXI"
+              value: "*"
+          livenessProbe:
+            httpGet:
+              path: /v1/_health
+              port: 80
+          readinessProbe:
+            httpGet:
+              path: /v1/_health
+              port: 80
