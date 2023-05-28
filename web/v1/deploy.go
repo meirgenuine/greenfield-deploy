@@ -69,13 +69,10 @@ func (h deploymentService) DeployHandler(w http.ResponseWriter, r *http.Request)
 
 func (h deploymentService) deploy(d *DeployRequest) {
 	var reqErr error
-	midErr := make([]error, 0, 2)
 
 	defer func() {
 		if reqErr != nil {
 			h.Notify(d, fmt.Sprintf("Error occurred: %s", reqErr))
-		} else if len(midErr) > 0 {
-			h.Notify(d, fmt.Sprintf("Deployed with error: %s", midErr[0]))
 		} else if r := recover(); r != nil {
 			h.Notify(d, fmt.Sprintf("Server error occurred: %v", r))
 		} else {
@@ -93,7 +90,6 @@ func (h deploymentService) deploy(d *DeployRequest) {
 		r, err := github.DownloadContent(c)
 		if err != nil {
 			log.Printf("error on download content: %v\n", err)
-			midErr = append(midErr, fmt.Errorf("github: download: %w", err))
 			continue
 		}
 
@@ -123,7 +119,6 @@ func (h deploymentService) deploy(d *DeployRequest) {
 		manifest := io.NopCloser(strings.NewReader(vm.String()))
 		if err := k8s.Deploy(k8s.NewKubernetesConfigLocal(), d.Namespace, manifest); err != nil {
 			log.Println("[deploy]", "deploy to namespace", err)
-			midErr = append(midErr, fmt.Errorf("k8s: deploy: %w", err))
 			continue
 		}
 	}
@@ -136,7 +131,7 @@ func (h deploymentService) Notify(r *DeployRequest, message string) {
 		},
 		notification.Notification{
 			Message: fmt.Sprintf(
-				"%s:```\nProject: %s\nVersion: %s\nCluster: %s\nNamespace: %s\nEnv: %s```",
+				"%s:\n```\nProject: %s\nVersion: %s\nCluster: %s\nNamespace: %s\nEnv: %s```",
 				message,
 				r.Project,
 				r.Version,
