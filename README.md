@@ -123,7 +123,7 @@ This job is responsible for running end-to-end tests on the application. Here's 
 
 The Docker Release workflow is responsible for building and pushing Docker images to Docker Hub.
 
-The workflow is triggered when there's a new commit pushed to the **master** or **develop** branches, or when a new pull request is opened.
+The workflow is triggered when **Unit Tests, Gosec and Lint Workflow** is completed.
 
 Here's an overview of the steps in the workflow:
 
